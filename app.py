@@ -1,12 +1,14 @@
 from flask import Flask, render_template, request
 import joblib
 import pandas as pd
+from pathlib import Path
 
 app = Flask(__name__, static_folder="templates", static_url_path="/templates")
+BASE_DIR = Path(__file__).resolve().parent
 
 # Load the trained models once, when the server starts
-today_data = joblib.load("rain_today_model.pkl")
-tomorrow_data = joblib.load("rain_tomorrow_model.pkl")
+today_data = joblib.load(BASE_DIR / "rain_today_model.pkl")
+tomorrow_data = joblib.load(BASE_DIR / "rain_tomorrow_model.pkl")
 
 
 def predict_rain(temperature, humidity, pressure, wind_speed, cloud_cover):
