@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RainfallPrediction</title>
+<style>
+* {
+box-sizing: border-box;
+}
+html, body {
+min-height: 100%;
+}
+body{
+font-family:Arial, sans-serif;
+background: #f0f4f8 url("/templates/bg-image.png") center center / cover no-repeat fixed;
+display: flex;
+justify-content: center;
+margin: 0;
+padding: clamp(20px, 6vw, 40px);
+}
+.card {
+background: white;
+padding: 30px 40px;
+border-radius: 12px;
+box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+width: min(380px, 100%);
+}
+h1 { font-size: 22px; margin-bottom: 20px; color: #1a3d5c; }
+label {
+display: block; margin-top: 12px;
+font-size: 14px; color: #333;
+}
+input {
+width: 100%;
+padding: 8px;
+margin-top: 4px;
+border: 1px solid #ccc;
+border-radius: 6px;
+box-sizing: border-box;
+}
+button {
+margin-top: 20px;
+width: 100%;
+padding: 10px;
+background: #1a73e8;
+color: white;
+border: none;
+border-radius: 6px;
+font-size: 15px;
+cursor: pointer;
+}
+button:hover { background: #1558b0; }
+.result {
+margin-top: 20px;
+padding: 15px;
+background: #eaf3ff;
+border-radius: 8px;
+}
+.result p { margin: 6px 0; font-size: 16px; }
+@media (max-width: 480px) {
+.card {
+padding: 24px 20px;
+}
+h1 {
+font-size: 20px;
+}
+.result p {
+font-size: 15px;
+}
+}
+</style>
+</head>
+<body>
+<div class="card">
+<h1>Rainfall Prediction</h1>
+<form method="POST">
+<label>Temperature (°C)</label>
+<input type="number" step="0.1" name="temperature" required>
+<label>Humidity (%)</label>
+<input type="number" step="1" name="humidity" required>
+<label>Atmospheric Pressure (hPa)</label>
+<input type="number" step="0.1" name="pressure" required>
+<label>Wind Speed (km/h)</label>
+<input type="number" step="1" name="wind_speed" required>
+<label>Cloud Cover(0-8 oktas)</label>
+<input type="number" step="1" name="cloud_cover" required>
+<button type="submit">Predict Rainfall</button>
+</form>
+{% if result %}
+<div class="result">
+<p><strong>Chance of rain today:</strong> {{result.today }}%</p>
+<p><strong>Chance of rain tomorrow:</strong>
+{{result.tomorrow }}%</p>
+</div>
+{% endif%}
+</div>
+</body>
+</html>
