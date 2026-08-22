@@ -12,13 +12,9 @@ tomorrow_data = joblib.load(BASE_DIR / "rain_tomorrow_model.pkl")
 
 
 def predict_rain(temperature, humidity, pressure, wind_speed, cloud_cover):
-	input_df = pd.DataFrame([{
-		"Temperature": temperature,
-		"Humidity": humidity,
-		"AtmosphericPressure": pressure,
-		"WindSpeed": wind_speed,
-		"CloudCover": cloud_cover
-	}])
+	values = [temperature, humidity, pressure, wind_speed, cloud_cover]
+	features = today_data["features"]
+	input_df = pd.DataFrame([values], columns=features)
 	scaled_today = today_data["scaler"].transform(input_df)
 	prob_today = today_data["model"].predict_proba(scaled_today)[0][1]
 	scaled_tomorrow = tomorrow_data["scaler"].transform(input_df)
@@ -29,18 +25,17 @@ def predict_rain(temperature, humidity, pressure, wind_speed, cloud_cover):
 @app.route("/", methods=["GET", "POST"])
 def home():
 	result = None
+	error = None
 	if request.method == "POST":
-		# Read the values typed into the form
-		temperature = float(request.form["temperature"])
-		humidity = float(request.form["humidity"])
-		pressure = float(request.form["pressure"])
-		wind_speed = float(request.form["wind_speed"])
-		cloud_cover = float(request.form["cloud_cover"])
-		today_pct, tomorrow_pct = predict_rain(
-			temperature, humidity, pressure, wind_speed, cloud_cover
-		)
-		result = {"today": today_pct, "tomorrow": tomorrow_pct}
-	return render_template("index.html", result=result)
+		try:
+			values = [float(request.form[field]) for field in (
+				"temperature", "humidity", "pressure", "wind_speed", "cloud_cover"
+			)]
+			today_pct, tomorrow_pct = predict_rain(*values)
+			result = {"today": today_pct, "tomorrow": tomorrow_pct}
+		except (KeyError, TypeError, ValueError):
+			error = "Please enter a valid number in every field."
+	return render_template("index.html", result=result, error=error)
 
 
 if __name__ == "__main__":

@@ -93,6 +93,10 @@ font-size: 15px;
 <p><strong>Chance of rain tomorrow:</strong>
 {{result.tomorrow }}%</p>
 </div>
+{% elif error %}
+<div class="result">
+<p>{{ error }}</p>
+</div>
 {% endif%}
 </div>
 </body>
